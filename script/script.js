@@ -54,17 +54,73 @@ document.addEventListener('DOMContentLoaded', () => {// js начнет рабо
   };
 
   const accordion = () => {
-    const characteristicsTitle = document.querySelectorAll('.characteristics__title');
-    const characteristicsDescription = document.querySelectorAll('.characteristics__description');
+    const characteristicsListElem = document.querySelector('.characteristics__list');
+    const characteristicsItemElems = document.querySelectorAll('.characteristics__item');
 
-    characteristicsTitle.forEach((elem, i) => {
-      elem.addEventListener('click', () => {
-        elem.classList.toggle('active');
-        characteristicsDescription[i].classList.toggle('active');
-      });
+    // characteristicsItemElems.forEach(elem => {
+    //   if (elem.children[1].classList.contains('active')) {
+    //     elem.children[1].style.height = `${elem.children[1].scrollHeight}px`;
+    //   }
+    // });//сразу активен один параметр
+
+    const open = (button, dropDown) => {
+      closeAllDrops();//  при открывании какого то,закрываю все остальныые
+      dropDown.style.height = `${dropDown.scrollHeight}px`;//  при открывании будет брать высоту из открытого элемента
+      button.classList.add('active');
+      dropDown.classList.add('active');
+    };
+
+    const close = (button, dropDown) => {
+      button.classList.remove('active');
+      dropDown.classList.remove('active');
+      dropDown.style.height = '';// при закрытии убираю высоту элемента,он спрячется внутри
+    };
+
+    const closeAllDrops = (button, dropDown) => {// закрывает всё
+      characteristicsItemElems.forEach((elem) => {
+        // console.log(elem.children);//дети elem, те,кто находятся внутри него
+        if (elem.children[0] !== button && elem.children[1] !== dropDown) {
+          close(elem.children[0], elem.children[1]);
+        }
+      });// закрывает все,кроме одного открытого
+    };
+
+    characteristicsListElem.addEventListener('click', (event) => {
+      const target = event.target;
+      if (target.classList.contains('characteristics__title')) {//  кликаю на кнопку,получаю его родителя
+        const parent = target.closest('.characteristics__item');//  closest соседей не смотрит,поднимется выше..если родитель такой,
+        //  то выполняю действие
+        const description = parent.querySelector('.characteristics__description')
+        // console.log(description.textContent)
+        description.classList.contains('active') ? close(target, description) : open(target, description);
+      }
+    });
+
+    document.body.addEventListener('click', (event) => {
+      const targent = event.target;
+      if (!targent.closest('.characteristics__list')) {
+        closeAllDrops();
+      }
+    });// закрывает все при нажатии на любом месте
+  };
+
+  const modal = () => {
+    const cardDetailsButtonBuy = document.querySelector('.card-details__button_buy');
+    const modal = document.querySelector('.modal');
+
+    cardDetailsButtonBuy.addEventListener('click', () => {
+      modal.classList.add('open');
+    });
+
+    modal.addEventListener('click', (event) => {
+      const target = event.target;
+      if (target.classList.contains('modal__close')) {
+        modal.classList.remove('open');
+      }
     });
   };
 
   tabs();
   accordion();
+  modal();
 });
