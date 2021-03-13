@@ -1,22 +1,45 @@
 document.addEventListener('DOMContentLoaded', () => {// js начнет работать только после загрузки html
   // дожидается загрузки домДерева
   'use strict';// не позволит запускать код,если в нём есть ошибки(если есть необъявленные переменные и тд)
+  
+  // const getData = (url, cb) => {
+  //   const request = new XMLHttpRequest();
+  //   // console.log(request.readyState);//0 стадия
+  //   request.open('GET', url);//настраиваю соединение,получаю данные
+  //   // console.log(request.readyState);//1 стадия
+  //   request.addEventListener('readystatechange', () => {//срабатывает когда меняется значение свойства readystate
+  //     if (request.readyState !== 4) return;// 4 стадия,когда данные уже получены
+  //     if (request.status === 200) {
+  //       const response = JSON.parse(request.response);// преобразую полученный ответ
+  //       cb(response);
+  //     } else {
+  //       console.error(new Error('Ошибка:', request.status));
+  //     }
+  //   });
+  //   request.send();
+  // };
+
+
+
+  // fetch 1
   const getData = (url, cb) => {
-    const request = new XMLHttpRequest();
-    // console.log(request.readyState);//0 стадия
-    request.open('GET', url);//настраиваю соединение,получаю данные
-    // console.log(request.readyState);//1 стадия
-    request.addEventListener('readystatechange', () => {//срабатывает когда меняется значение свойства readystate
-      if (request.readyState !== 4) return;// 4 стадия,когда данные уже получены
-      if (request.status === 200) {
-        const response = JSON.parse(request.response);// преобразую полученный ответ
-        cb(response);
-      } else {
-        console.error(new Error('Ошибка:', request.status));
-      }
-    });
-    request.send();
+    fetch(url)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error(response.statusText);
+      })
+      .then(cb)
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+  // fetch2,когда ошибок вообще нет
+  // const getData = (url, cb) => fetch(url).then((response) => response.json().then(cb));
+
+
 
   const tabs = () => {
     const cardDetailChangeElems = document.querySelectorAll('.card-detail__change');// все элементы
@@ -173,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {// js начнет рабо
 							<img class="cross-sell__image" src="${photo}" alt="${name}">
 							<h3 class="cross-sell__title">${name}</h3>
 							<p class="cross-sell__price">${price}</p>
-							<div class="button button_buy cross-sell__button">Купить</div>
+							<button type="button" class="button button_buy cross-sell__button">Купить</button>
 						</article>
               `;
       return liItem;
