@@ -1,6 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {// js начнет работать только после загрузки html
   // дожидается загрузки домДерева
   'use strict';// не позволит запускать код,если в нём есть ошибки(если есть необъявленные переменные и тд)
+  const getData = (url, cb) => {
+    const request = new XMLHttpRequest();
+    // console.log(request.readyState);//0 стадия
+    request.open('GET', url);//настраиваю соединение,получаю данные
+    // console.log(request.readyState);//1 стадия
+    request.addEventListener('readystatechange', () => {//срабатывает когда меняется значение свойства readystate
+      if (request.readyState !== 4) return;// 4 стадия,когда данные уже получены
+      if (request.status === 200) {
+        const response = JSON.parse(request.response);// преобразую полученный ответ
+        cb(response);
+      } else {
+        console.error(new Error('Ошибка:', request.status));
+      }
+    });
+    request.send();
+  };
 
   const tabs = () => {
     const cardDetailChangeElems = document.querySelectorAll('.card-detail__change');// все элементы
@@ -106,21 +122,72 @@ document.addEventListener('DOMContentLoaded', () => {// js начнет рабо
 
   const modal = () => {
     const cardDetailsButtonBuy = document.querySelector('.card-details__button_buy');
+    const cardDetailsButtonDelivery = document.querySelector('.card-details__button_delivery');
     const modal = document.querySelector('.modal');
+    const cardDetailsTitle = document.querySelector('.card-details__title');
+    const modalTitle = modal.querySelector('.modal__title');
+    const modalSubtitle = modal.querySelector('.modal__subtitle');
+    const modalTitleSubmit = modal.querySelector('.modal__title-submit');
 
-    cardDetailsButtonBuy.addEventListener('click', () => {
+    const openModal = event => {//функция открыия модального окна
+      const target = event.target;
       modal.classList.add('open');
-    });
+      document.addEventListener('keydown', escHandler);
+      modalTitle.textContent = cardDetailsTitle.textContent;//при открывании модального окна параметры телефона из описания записываются в описание на модальном окне
+      modalTitleSubmit.value = cardDetailsTitle.textContent;
+      modalSubtitle.textContent = target.dataset.buttonBuy;//тк dataset атрибут тире стало кемелкейсом
+    };
+
+    const closeModal = () => {// закрытия окна
+      modal.classList.remove('open');
+      document.removeEventListener('keydown', escHandler);// удаляю слушатель после закрытия модального окна,чтобы при нажатии esс
+      //в пустоту не срабатывал
+    };
+
+    const escHandler = event => {// закрывать при нажатии esc
+      if (event.code === 'Escape') {
+        closeModal();
+      }
+    };
+
+    cardDetailsButtonBuy.addEventListener('click', openModal);//при нажатии на Купить,открываю модальное окно
+    cardDetailsButtonDelivery.addEventListener('click', openModal);
 
     modal.addEventListener('click', (event) => {
       const target = event.target;
-      if (target.classList.contains('modal__close')) {
-        modal.classList.remove('open');
+      // console.log(target);
+      if (target.classList.contains('modal__close') || target === modal) {
+      //при нажатии на крестик или нажимаю в любое место,кроме модального окна, закрываю его
+        closeModal();
       }
     });
+  };
+
+  const renderCrossSell = () => {
+    const crossSellList = document.querySelector('.cross-sell__list');
+    const createCrossSellItem = (good) => {
+      const { name, price, photo } = good;
+      const liItem = document.createElement('li');
+      liItem.innerHTML = `
+            <article class="cross-sell__item">
+							<img class="cross-sell__image" src="${photo}" alt="${name}">
+							<h3 class="cross-sell__title">${name}</h3>
+							<p class="cross-sell__price">${price}</p>
+							<div class="button button_buy cross-sell__button">Купить</div>
+						</article>
+              `;
+      return liItem;
+    };
+    const createCrossSellList = (goods) => {
+      goods.forEach(item => {
+        crossSellList.append(createCrossSellItem(item));
+      });
+    };
+    getData('cross-sell-dbase/dbase.json', createCrossSellList);
   };
 
   tabs();
   accordion();
   modal();
+  renderCrossSell();
 });
