@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {// js начнет работать только после загрузки html
-  //дожидается загрузки домДерева
-  'use strict';//не позволит запускать код,если в нём есть ошибки(если есть необъявленные переменные и тд)
+  // дожидается загрузки домДерева
+  'use strict';// не позволит запускать код,если в нём есть ошибки(если есть необъявленные переменные и тд)
 
   const tabs = () => {
-    const cardDetailChangeElems = document.querySelectorAll('.card-detail__change');//все элементы
-    const cardDetailsTitleElem = document.querySelector('.card-details__title');//один заголовок
+    const cardDetailChangeElems = document.querySelectorAll('.card-detail__change');// все элементы
+    const cardDetailsTitleElem = document.querySelector('.card-details__title');// один заголовок
     const cardImageItemElem = document.querySelector('.card__image_item');
     const cardDetailsPriceElem = document.querySelector('.card-details__price');
     const descriptionMemory = document.querySelector('.description__memory');
+    const descriptionCamera = document.querySelector('.description__camera');
 
     const data = [
       {
@@ -15,18 +16,21 @@ document.addEventListener('DOMContentLoaded', () => {// js начнет рабо
         img: 'img/iPhone-graphite.png',
         price: 29990,
         memory: 128,
+        camera: '12/12/12',
       },
       {
         name: 'Смартфон Apple iPhone 12 Pro 512GB Silver',
         img: 'img/iPhone-silver.png',
         price: 32990,
         memory: 512,
+        camera: '12/48/12',
       },
       {
         name: 'Смартфон Apple iPhone 12 Pro 768GB Pacific Blue',
         img: 'img/iPhone-blue.png',
         price: 35990,
         memory: 768,
+        camera: '12/64/108',
       },
     ];
 
@@ -35,17 +39,32 @@ document.addEventListener('DOMContentLoaded', () => {// js начнет рабо
     };
     cardDetailChangeElems.forEach((btn, i) => {
       btn.addEventListener('click', () => {
-        if (!btn.classList.contains('active')) {//если btn не содержит класс active
+        if (!btn.classList.contains('active')) {// если btn не содержит класс active
           deactive();
           btn.classList.add('active');
           cardDetailsTitleElem.textContent = data[i].name;
-          cardImageItemElem.src = data[i].img;//добавляю атрибуты
+          cardImageItemElem.src = data[i].img;// добавляю атрибуты
           cardImageItemElem.alt = data[i].name;
           cardDetailsPriceElem.textContent = data[i].price + '₽';
-          descriptionMemory.textContent = `Встроенная память (ROM) ${data[i].memory} ГБ`;
+          descriptionMemory.textContent = `Встроенная память (ROM) ${data[i].memory} ГБ`;// меняю текстКонтент
+          descriptionCamera.textContent = `Основная камера МПикс ${data[i].camera} LiDAR`;
         }
       });
-    })
+    });
   };
+
+  const accordion = () => {
+    const characteristicsTitle = document.querySelectorAll('.characteristics__title');
+    const characteristicsDescription = document.querySelectorAll('.characteristics__description');
+
+    characteristicsTitle.forEach((elem, i) => {
+      elem.addEventListener('click', () => {
+        elem.classList.toggle('active');
+        characteristicsDescription[i].classList.toggle('active');
+      });
+    });
+  };
+
   tabs();
+  accordion();
 });
