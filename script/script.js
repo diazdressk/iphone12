@@ -48,6 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {// js начнет рабо
     const cardDetailsPriceElem = document.querySelector('.card-details__price');
     const descriptionMemory = document.querySelector('.description__memory');
     const descriptionCamera = document.querySelector('.description__camera');
+    const characteristicsItemDescriptionCamera = document.querySelector('#characteristics__item-description-camera');
+    const characteristicsItemDescriptionMemory = document.querySelector('#characteristics__item-description-memory');
 
     const data = [
       {
@@ -87,6 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {// js начнет рабо
           cardDetailsPriceElem.textContent = data[i].price + '₽';
           descriptionMemory.textContent = `Встроенная память (ROM) ${data[i].memory} ГБ`;// меняю текстКонтент
           descriptionCamera.textContent = `Основная камера МПикс ${data[i].camera} LiDAR`;
+          characteristicsItemDescriptionCamera.textContent = `${data[i].camera} LiDAR`;
+          characteristicsItemDescriptionMemory.textContent = `${data[i].memory}`;
         }
       });
     });
@@ -188,8 +192,10 @@ document.addEventListener('DOMContentLoaded', () => {// js начнет рабо
 
   const renderCrossSell = () => {
     const crossSellList = document.querySelector('.cross-sell__list');
-    const createCrossSellItem = (good) => {
-      const { name, price, photo } = good;
+
+    const shuffle =  arr => arr.sort(() => Math.random() - 0.5);
+    const createCrossSellItem = (goods) => {
+      const { name, price, photo } = goods;
       const liItem = document.createElement('li');
       liItem.innerHTML = `
             <article class="cross-sell__item">
@@ -202,7 +208,9 @@ document.addEventListener('DOMContentLoaded', () => {// js начнет рабо
       return liItem;
     };
     const createCrossSellList = (goods) => {
-      goods.forEach(item => {
+      const shuffleGoods = shuffle(goods);
+      const fourItems = shuffleGoods.slice(0, 4);
+      fourItems.forEach(item => {
         crossSellList.append(createCrossSellItem(item));
       });
     };
@@ -213,4 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {// js начнет рабо
   accordion();
   modal();
   renderCrossSell();
+  amenu('.header__menu', '.header-menu__list', '.header-menu__item', '.header-menu__burger');
+  //header-menu__burger -родитель,там,где будет находиться бургерМеню
 });

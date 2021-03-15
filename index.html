@@ -7,7 +7,11 @@
 	<title>iPhone</title>
 
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="/amenu/amenu.css">
+
+	<script src="/amenu/amenu.js" defer></script>
 	<script src="script/script.js" defer></script>
+	<!-- defer загружать страницу,параллельно скрипт,потом подключает его-->
 
 </head>
 <body>
@@ -20,7 +24,7 @@
 					<li class="header-menu__item"><a href="#card">Карточка товара</a></li>
 					<li class="header-menu__item"><a href="#characteristics">Характеристики</a></li>
 					<li class="header-menu__item"><a href="#cross-sell">Дополняют товар</a></li>
-					<li class="header-menu__item"><a href="#">Отзывы</a></li>
+					<li class="header-menu__item"><a href="https://market.yandex.ru/product--smartfon-apple-iphone-12-64gb/722976004/reviews?cpa=0">Отзывы</a></li>
 					<li class="header-menu__item"><a href="#">Условия доставки</a></li>
 				</ul>
 				<div class="header-menu__burger"></div>
@@ -137,7 +141,7 @@
 							<ul class="characteristics__list-description">
 								<li class="characteristics__item-description">
 									<p>Фотокамера (Мп)</p>
-									<p>12 + 12 + 12 + сканер LiDAR</p>
+									<p id="characteristics__item-description-camera">12/12/12 LiDAR</p>
 								</li>
 								<li class="characteristics__item-description">
 									<p>Оптический зум</p>
@@ -238,7 +242,7 @@
 							<ul class="characteristics__list-description">
 								<li class="characteristics__item-description">
 									<p>Встроенная память (Гб)</p>
-									<p>128</p>
+									<p id="characteristics__item-description-memory">128</p>
 								</li>
 								<li class="characteristics__item-description">
 									<p>Поддержка карт памяти</p>
